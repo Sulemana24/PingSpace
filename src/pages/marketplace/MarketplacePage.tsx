@@ -308,7 +308,11 @@ export default function MarketplacePage() {
                 type="file"
                 accept="image/*"
                 className="w-full p-2 border rounded text-white"
-                onChange={(e) => setSelectedImage(e.target.files[0])}
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    setSelectedImage(e.target.files[0]);
+                  }
+                }}
               />
 
               <select className="w-full p-2 border rounded text-black">
