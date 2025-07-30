@@ -60,7 +60,7 @@ const CreateSpaceForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="p-4 space-y-4 bg-white dark:bg-neutral-900 rounded-lg shadow"
+      className="p-4 space-y-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow"
     >
       <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
         Create a New Space
@@ -77,7 +77,7 @@ const CreateSpaceForm = () => {
         <input
           value={spaceName}
           onChange={(e) => setSpaceName(e.target.value)}
-          className="w-full p-2 rounded border dark:bg-neutral-800 dark:border-neutral-700"
+          className="w-full p-2 rounded border dark:bg-gray-800  dark:border-gray-700"
           placeholder="e.g. Web Developers"
           required
         />
@@ -88,7 +88,7 @@ const CreateSpaceForm = () => {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 rounded border dark:bg-neutral-800 dark:border-neutral-700"
+          className="w-full p-2 rounded border dark:bg-gray-800 dark:border-gray-700"
           rows={3}
           placeholder="Brief description of the space..."
         />
@@ -117,7 +117,7 @@ const CreateSpaceForm = () => {
           value={tagInput}
           onChange={(e) => setTagInput(e.target.value)}
           onKeyDown={handleTagKeyDown}
-          className="w-full p-2 rounded border dark:bg-neutral-800 dark:border-neutral-700"
+          className="w-full p-2 rounded border dark:bg-gray-800 dark:border-gray-700"
           placeholder="Press Enter or comma to add a tag"
         />
       </div>

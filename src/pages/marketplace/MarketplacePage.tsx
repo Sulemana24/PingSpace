@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 
-import { FaTimes, FaShoppingCart } from "react-icons/fa";
+import {
+  FaTimes,
+  FaShoppingCart,
+  FaStore,
+  FaBoxOpen,
+  FaClipboardList,
+  FaTags,
+} from "react-icons/fa";
 import backpack from "../../components/assets/backpack.jpeg";
 import headset from "../../components/assets/headset.jpeg";
 import jacket from "../../components/assets/jcket.jpeg";
@@ -12,6 +19,15 @@ import speaker from "../../components/assets/speaker.jpeg";
 import sunglasses from "../../components/assets/sunglasses.jpeg";
 import tablet from "../../components/assets/tablet.jpeg";
 import watch from "../../components/assets/watch.jpeg";
+
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  image: string;
+  description: string;
+};
 
 const sampleProducts = [
   {
@@ -91,12 +107,11 @@ const sampleProducts = [
 export default function MarketplacePage() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [priceFilter, setPriceFilter] = useState("All");
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [cart, setCart] = useState([]);
-  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [cart, setCart] = useState<Product[]>([]);
+  const [activeTab, setActiveTab] = useState("browse");
   const [showCartModal, setShowCartModal] = useState(false);
   const navigate = useNavigate();
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const filteredProducts = sampleProducts.filter((product) => {
     const matchCategory =
@@ -111,31 +126,83 @@ export default function MarketplacePage() {
     return matchCategory && matchPrice;
   });
 
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-    alert(`Ghc{product.name} added to cart!`);
+  const addToCart = (product: Product) => {
+    setCart((prevCart) => [...prevCart, product]);
+    alert(`Ghc${product.name} added to cart!`);
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 p-4 space-y-6">
+    <div className="min-h-screen  bg-white dark:bg-gray-900 p-4 space-y-6">
       <div className="flex flex-wrap justify-between items-center gap-4">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Marketplace
         </h1>
-        <div className="flex gap-3">
-          <button
-            onClick={() => setShowCartModal(true)}
-            className="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md"
-          >
-            <FaShoppingCart />
-            <span>Cart ({cart.length})</span>
-          </button>
-          <button
-            onClick={() => setIsPostModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-          >
-            Post New Item
-          </button>
+      </div>
+      <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg shadow flex justify-between items-center flex-wrap gap-2 mt-4">
+        <div
+          onClick={() => setActiveTab("browse")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer transition ${
+            activeTab === "browse"
+              ? "bg-red-600 text-white hover:bg-red-700"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+          }`}
+        >
+          <FaStore
+            className={activeTab === "browse" ? "text-white" : "text-red-500"}
+          />
+          <span>Browse</span>
+        </div>
+
+        <div
+          onClick={() => setActiveTab("myProducts")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer transition ${
+            activeTab === "myProducts"
+              ? "bg-red-600 text-white hover:bg-red-700"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+          }`}
+        >
+          <FaClipboardList
+            className={
+              activeTab === "myProducts" ? "text-white" : "text-red-500"
+            }
+          />
+          <span>My Products</span>
+        </div>
+
+        <div
+          onClick={() => setActiveTab("orders")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer transition ${
+            activeTab === "orders"
+              ? "bg-red-600 text-white hover:bg-red-700"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+          }`}
+        >
+          <FaBoxOpen
+            className={activeTab === "orders" ? "text-white" : "text-red-500"}
+          />
+          <span>Orders</span>
+        </div>
+
+        <div
+          onClick={() => setActiveTab("sell")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer transition ${
+            activeTab === "sell"
+              ? "bg-red-600 text-white hover:bg-red-700"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+          }`}
+        >
+          <FaTags
+            className={activeTab === "sell" ? "text-white" : "text-red-500"}
+          />
+          <span>Sell</span>
+        </div>
+
+        <div
+          onClick={() => setShowCartModal(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer bg-gray-700 hover:bg-gray-800 text-white transition"
+        >
+          <FaShoppingCart />
+          <span>Cart ({cart.length})</span>
         </div>
       </div>
 
@@ -162,7 +229,7 @@ export default function MarketplacePage() {
         </select>
       </div>
 
-      <div className="overflow-y-auto max-h-[70vh]">
+      <div className="overflow-y-auto max-h-[30vh] md:max-h-[60vh]">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredProducts.length === 0 ? (
             <p className="text-gray-600 dark:text-gray-300">
@@ -179,7 +246,7 @@ export default function MarketplacePage() {
                   alt={product.name}
                   className="w-full h-48 object-cover"
                 />
-                <div className="p-4 space-y-2">
+                <div className="p-4 space-y-2  mb-8">
                   <h2
                     className="text-lg font-semibold cursor-pointer"
                     onClick={() => setSelectedProduct(product)}
@@ -191,7 +258,7 @@ export default function MarketplacePage() {
                   </p>
                   <button
                     onClick={() => addToCart(product)}
-                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md"
+                    className="bg-red-600 hover:bg-red-700 transition text-white px-3 py-1 rounded-md"
                   >
                     Add to Cart
                   </button>
@@ -276,60 +343,6 @@ export default function MarketplacePage() {
           </div>
         </Dialog>
       )}
-
-      {/* Post Item Modal */}
-      <Dialog open={isPostModalOpen} onClose={() => setIsPostModalOpen(false)}>
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white dark:bg-gray-900 rounded-lg max-w-md w-full p-6 relative">
-            <button
-              onClick={() => setIsPostModalOpen(false)}
-              className="absolute top-2 right-2 text-gray-600 dark:text-gray-300"
-            >
-              <FaTimes />
-            </button>
-            <h2 className="text-xl font-bold mb-4">Post New Item</h2>
-
-            <form className="space-y-4">
-              <input
-                type="text"
-                placeholder="Item Name"
-                className="w-full p-2 border rounded text-black"
-              />
-              <textarea
-                placeholder="Description"
-                className="w-full p-2 border rounded text-black"
-              ></textarea>
-              <input
-                type="number"
-                placeholder="Price"
-                className="w-full p-2 border rounded text-black"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                className="w-full p-2 border rounded text-white"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files.length > 0) {
-                    setSelectedImage(e.target.files[0]);
-                  }
-                }}
-              />
-
-              <select className="w-full p-2 border rounded text-black">
-                <option>Category</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Fashion">Fashion</option>
-              </select>
-              <button
-                type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
-      </Dialog>
     </div>
   );
 }
