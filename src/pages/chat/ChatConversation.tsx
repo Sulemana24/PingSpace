@@ -1,64 +1,77 @@
-import { useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Phone, Video, MoreVertical, Send, Smile, Paperclip } from 'lucide-react'
-import AIAssistantToolbar from '@/components/ai/AIAssistantToolbar'
+import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import {
+  ArrowLeft,
+  Phone,
+  Video,
+  MoreVertical,
+  Send,
+  Smile,
+  Paperclip,
+} from "lucide-react";
+import AIAssistantToolbar from "@/components/ai/AIAssistantToolbar";
 
 interface Message {
-  id: string
-  text: string
-  sender: 'me' | 'other'
-  timestamp: Date
+  id: string;
+  text: string;
+  sender: "me" | "other";
+  timestamp: Date;
 }
 
 export default function ChatConversation() {
-  const { chatId } = useParams()
-  const [message, setMessage] = useState('')
+  const { chatId } = useParams();
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
-      text: 'Hey! How are you doing?',
-      sender: 'other',
-      timestamp: new Date(Date.now() - 1000 * 60 * 5)
+      id: "1",
+      text: "Hey! How are you doing?",
+      sender: "other",
+      timestamp: new Date(Date.now() - 1000 * 60 * 5),
     },
     {
-      id: '2',
-      text: 'I\'m doing great! Just working on some exciting projects.',
-      sender: 'me',
-      timestamp: new Date(Date.now() - 1000 * 60 * 3)
+      id: "2",
+      text: "I'm doing great! Just working on some exciting projects.",
+      sender: "me",
+      timestamp: new Date(Date.now() - 1000 * 60 * 3),
     },
     {
-      id: '3',
-      text: 'That sounds awesome! Tell me more about it.',
-      sender: 'other',
-      timestamp: new Date(Date.now() - 1000 * 60 * 1)
-    }
-  ])
+      id: "3",
+      text: "That sounds awesome! Tell me more about it.",
+      sender: "other",
+      timestamp: new Date(Date.now() - 1000 * 60 * 1),
+    },
+  ]);
 
   const handleSendMessage = () => {
     if (message.trim()) {
       const newMessage: Message = {
         id: Date.now().toString(),
         text: message,
-        sender: 'me',
-        timestamp: new Date()
-      }
-      setMessages([...messages, newMessage])
-      setMessage('')
+        sender: "me",
+        timestamp: new Date(),
+      };
+      setMessages([...messages, newMessage]);
+      setMessage("");
     }
-  }
+  };
 
   const handleSelectReply = (reply: string) => {
-    setMessage(reply)
-  }
+    setMessage(reply);
+  };
 
-  const lastOtherMessage = messages.filter(m => m.sender === 'other').pop()?.text
+  const lastOtherMessage = messages
+    .filter((m) => m.sender === "other")
+    .pop()?.text;
 
   return (
     <div className="h-full flex flex-col bg-white dark:bg-gray-900">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
-          <Link to="/chat" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+          <Link
+            to="/chat"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
             <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </Link>
           <img
@@ -67,7 +80,9 @@ export default function ChatConversation() {
             className="w-10 h-10 rounded-full"
           />
           <div>
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Alice Johnson</h1>
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Yussif Hawawu
+            </h1>
             <p className="text-sm text-green-500">Online</p>
           </div>
         </div>
@@ -90,20 +105,29 @@ export default function ChatConversation() {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${
+              msg.sender === "me" ? "justify-end" : "justify-start"
+            }`}
           >
             <div
               className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                msg.sender === 'me'
-                  ? 'bg-primary text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                msg.sender === "me"
+                  ? "bg-primary text-white"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
               }`}
             >
               <p className="text-sm">{msg.text}</p>
-              <p className={`text-xs mt-1 ${
-                msg.sender === 'me' ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'
-              }`}>
-                {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              <p
+                className={`text-xs mt-1 ${
+                  msg.sender === "me"
+                    ? "text-white/70"
+                    : "text-gray-500 dark:text-gray-400"
+                }`}
+              >
+                {msg.timestamp.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
             </div>
           </div>
@@ -112,8 +136,8 @@ export default function ChatConversation() {
 
       {/* AI Assistant Toolbar */}
       <AIAssistantToolbar
-        chatId={chatId || ''}
-        messages={messages.map(m => m.text)}
+        chatId={chatId || ""}
+        messages={messages.map((m) => m.text)}
         lastMessage={lastOtherMessage}
         onSelectReply={handleSelectReply}
       />
@@ -129,7 +153,7 @@ export default function ChatConversation() {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               placeholder="Type a message..."
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
@@ -146,5 +170,5 @@ export default function ChatConversation() {
         </div>
       </div>
     </div>
-  )
+  );
 }

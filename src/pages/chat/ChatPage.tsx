@@ -15,7 +15,7 @@ interface Chat {
 const mockChats: Chat[] = [
   {
     id: "1",
-    name: "Alice Johnson",
+    name: "Sulemana Bindawdi",
     avatar:
       "https://images.unsplash.com/photo-1494790108755-2616b9c5e8e1?w=150&h=150&fit=crop&crop=face",
     lastMessage: "Hey! How are you doing?",
@@ -25,9 +25,8 @@ const mockChats: Chat[] = [
   },
   {
     id: "2",
-    name: "Bob Smith",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+    name: "Hayate Beauty",
+    avatar: "https://www.pinterest.com/pin/227994799876527977/",
     lastMessage: "Thanks for the help!",
     timestamp: "1h ago",
     unreadCount: 0,
@@ -35,9 +34,8 @@ const mockChats: Chat[] = [
   },
   {
     id: "3",
-    name: "Team Alpha",
-    avatar:
-      "https://ui-avatars.com/api/?name=Team+Alpha&background=FF1744&color=fff",
+    name: "Simdi Technologies",
+    avatar: "https://www.pinterest.com/pin/3166662229958986/",
     lastMessage: "Meeting at 3 PM today",
     timestamp: "3h ago",
     unreadCount: 5,
