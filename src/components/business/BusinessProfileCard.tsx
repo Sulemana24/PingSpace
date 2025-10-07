@@ -59,8 +59,7 @@ export default function BusinessProfileCard({
   const getCurrentStatus = () => {
     const now = new Date();
     const currentDay =
-      now.toLocaleString().toLowerCase().slice(0, 3) +
-      now.toLocaleString().toLowerCase().slice(3);
+      now.toLocaleString().slice(0, 3) + now.toLocaleString().slice(3);
     const currentTime = now.toTimeString().slice(0, 5);
 
     const todayHours = profile.businessHours.find(
