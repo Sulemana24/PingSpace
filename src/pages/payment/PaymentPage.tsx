@@ -1,25 +1,38 @@
 import { useState } from "react";
 import { Trash2, Pencil } from "lucide-react";
-
 import { useLocation, useNavigate } from "react-router-dom";
 
-// Inside the component
+type PaymentMethod = {
+  type: "Credit Card" | "Mobile Money";
+  provider: string;
+  last4?: string;
+  number?: string;
+};
+
+interface LocationState {
+  cart?: { name: string; price: number }[];
+  total?: number;
+}
 
 export default function PaymentPage() {
   const [showModal, setShowModal] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [methodType, setMethodType] = useState("Credit Card");
+  const [methodType, setMethodType] = useState<"Credit Card" | "Mobile Money">(
+    "Credit Card"
+  );
   const [provider, setProvider] = useState("Visa");
   const [accountInfo, setAccountInfo] = useState("");
-  const location = useLocation();
-  const navigate = useNavigate();
-  const cart = location.state?.cart || [];
-  const total = location.state?.total || 0;
 
-  const [paymentMethods, setPaymentMethods] = useState([
+  const location = useLocation() as { state?: LocationState };
+  const navigate = useNavigate();
+  const cart = location.state?.cart ?? [];
+  const total = location.state?.total ?? 0;
+
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
     { type: "Credit Card", provider: "Visa", last4: "4242" },
     { type: "Mobile Money", provider: "MTN", number: "0241234567" },
   ]);
+
   const [paymentHistory] = useState([
     { id: 1, date: "2025-07-10", amount: 49.99, method: "Visa" },
     { id: 2, date: "2025-06-10", amount: 49.99, method: "MTN MoMo" },
@@ -45,13 +58,12 @@ export default function PaymentPage() {
     setAccountInfo(
       method.type === "Credit Card" ? method.last4 || "" : method.number || ""
     );
-
     setShowModal(true);
   };
 
   const handleAddOrEditMethod = (e: React.FormEvent) => {
     e.preventDefault();
-    const newMethod =
+    const newMethod: PaymentMethod =
       methodType === "Credit Card"
         ? {
             type: "Credit Card",
@@ -104,7 +116,7 @@ export default function PaymentPage() {
             <h2 className="text-xl font-semibold mb-2">Checkout Summary</h2>
             <p className="mb-1">You are about to pay for:</p>
             <ul className="list-disc list-inside text-sm mb-2">
-              {cart.map((item: any, i: number) => (
+              {cart.map((item, i) => (
                 <li key={i}>
                   {item.name} - Ghc{item.price.toFixed(2)}
                 </li>
@@ -126,7 +138,7 @@ export default function PaymentPage() {
                   onChange={(e) => setProvider(e.target.value)}
                   value={provider}
                 >
-                  {paymentMethods.map((m, idx) => (
+                  {paymentMethods.map((m: PaymentMethod, idx: number) => (
                     <option key={idx} value={m.provider}>
                       {m.type} - {m.provider}
                     </option>
@@ -163,7 +175,7 @@ export default function PaymentPage() {
             </button>
           </div>
           <ul className="space-y-2">
-            {paymentMethods.map((method, index) => (
+            {paymentMethods.map((method: PaymentMethod, index: number) => (
               <li
                 key={index}
                 className="flex justify-between items-center border-b pb-2"
@@ -264,7 +276,9 @@ export default function PaymentPage() {
                 <select
                   value={methodType}
                   onChange={(e) => {
-                    const value = e.target.value;
+                    const value = e.target.value as
+                      | "Credit Card"
+                      | "Mobile Money";
                     setMethodType(value);
                     setProvider(value === "Credit Card" ? "Visa" : "MTN");
                   }}
