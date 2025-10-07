@@ -1,84 +1,98 @@
-import { 
-  Shield, 
-  Star, 
-  Clock, 
-  MapPin, 
-  Globe, 
-  Phone, 
+import {
+  Shield,
+  Star,
+  Clock,
+  MapPin,
+  Globe,
+  Phone,
   Mail,
   Calendar,
   CreditCard,
   Users,
   Award,
-  CheckCircle
-} from 'lucide-react'
-import { BusinessProfile, VerificationLevel } from '@/stores/businessStore'
+  CheckCircle,
+} from "lucide-react";
+import { BusinessProfile, VerificationLevel } from "@/stores/businessStore";
 
 interface BusinessProfileCardProps {
-  profile: BusinessProfile
-  variant?: 'full' | 'compact' | 'minimal'
-  showActions?: boolean
-  onContact?: () => void
-  onBookAppointment?: () => void
-  onRequestPayment?: () => void
+  profile: BusinessProfile;
+  variant?: "full" | "compact" | "minimal";
+  showActions?: boolean;
+  onContact?: () => void;
+  onBookAppointment?: () => void;
+  onRequestPayment?: () => void;
 }
 
-export default function BusinessProfileCard({ 
-  profile, 
-  variant = 'full',
+export default function BusinessProfileCard({
+  profile,
+  variant = "full",
   showActions = true,
   onContact,
   onBookAppointment,
-  onRequestPayment
+  onRequestPayment,
 }: BusinessProfileCardProps) {
-
-  const getVerificationBadge = (level: VerificationLevel, isVerified: boolean) => {
-    if (!isVerified) return null
+  const getVerificationBadge = (
+    level: VerificationLevel,
+    isVerified: boolean
+  ) => {
+    if (!isVerified) return null;
 
     const badges = {
-      basic: { color: 'bg-blue-500', icon: CheckCircle, label: 'Verified' },
-      premium: { color: 'bg-purple-500', icon: Shield, label: 'Premium' },
-      enterprise: { color: 'bg-gold-500', icon: Award, label: 'Enterprise' }
-    }
+      basic: { color: "bg-blue-500", icon: CheckCircle, label: "Verified" },
+      premium: { color: "bg-purple-500", icon: Shield, label: "Premium" },
+      enterprise: { color: "bg-gold-500", icon: Award, label: "Enterprise" },
+    };
 
-    const badge = badges[level]
-    const Icon = badge.icon
+    const badge = badges[level];
+    const Icon = badge.icon;
 
     return (
-      <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium text-white ${badge.color}`}>
+      <div
+        className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium text-white ${badge.color}`}
+      >
         <Icon className="w-3 h-3" />
         <span>{badge.label}</span>
       </div>
-    )
-  }
+    );
+  };
 
   const getCurrentStatus = () => {
-    const now = new Date()
-    const currentDay = now.toLocaleLowerCase().slice(0, 3) + now.toLocaleLowerCase().slice(3)
-    const currentTime = now.toTimeString().slice(0, 5)
-    
-    const todayHours = profile.businessHours.find(h => h.day === currentDay as any)
-    
+    const now = new Date();
+    const currentDay =
+      now.toLocaleString().toLowerCase().slice(0, 3) +
+      now.toLocaleString().toLowerCase().slice(3);
+    const currentTime = now.toTimeString().slice(0, 5);
+
+    const todayHours = profile.businessHours.find(
+      (h) => h.day === (currentDay as any)
+    );
+
     if (!todayHours || !todayHours.isOpen) {
-      return { isOpen: false, label: 'Closed', color: 'text-red-500' }
+      return { isOpen: false, label: "Closed", color: "text-red-500" };
     }
-    
+
     if (todayHours.openTime && todayHours.closeTime) {
-      if (currentTime >= todayHours.openTime && currentTime <= todayHours.closeTime) {
-        return { isOpen: true, label: 'Open', color: 'text-green-500' }
+      if (
+        currentTime >= todayHours.openTime &&
+        currentTime <= todayHours.closeTime
+      ) {
+        return { isOpen: true, label: "Open", color: "text-green-500" };
       }
     }
-    
-    return { isOpen: false, label: 'Closed', color: 'text-red-500' }
-  }
 
-  const status = getCurrentStatus()
+    return { isOpen: false, label: "Closed", color: "text-red-500" };
+  };
 
-  if (variant === 'minimal') {
+  const status = getCurrentStatus();
+
+  if (variant === "minimal") {
     return (
       <div className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
         <img
-          src={profile.logo || `https://ui-avatars.com/api/?name=${profile.businessName}&background=FF1744&color=fff`}
+          src={
+            profile.logo ||
+            `https://ui-avatars.com/api/?name=${profile.businessName}&background=FF1744&color=fff`
+          }
           alt={profile.businessName}
           className="w-10 h-10 rounded-lg"
         />
@@ -87,22 +101,28 @@ export default function BusinessProfileCard({
             <h3 className="font-medium text-gray-900 dark:text-white truncate">
               {profile.businessName}
             </h3>
-            {getVerificationBadge(profile.verificationLevel, profile.isVerified)}
+            {getVerificationBadge(
+              profile.verificationLevel,
+              profile.isVerified
+            )}
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
             {profile.description}
           </p>
         </div>
       </div>
-    )
+    );
   }
 
-  if (variant === 'compact') {
+  if (variant === "compact") {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
         <div className="flex items-start space-x-3">
           <img
-            src={profile.logo || `https://ui-avatars.com/api/?name=${profile.businessName}&background=FF1744&color=fff`}
+            src={
+              profile.logo ||
+              `https://ui-avatars.com/api/?name=${profile.businessName}&background=FF1744&color=fff`
+            }
             alt={profile.businessName}
             className="w-12 h-12 rounded-lg"
           />
@@ -111,13 +131,16 @@ export default function BusinessProfileCard({
               <h3 className="font-semibold text-gray-900 dark:text-white">
                 {profile.businessName}
               </h3>
-              {getVerificationBadge(profile.verificationLevel, profile.isVerified)}
+              {getVerificationBadge(
+                profile.verificationLevel,
+                profile.isVerified
+              )}
             </div>
-            
+
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
               {profile.description}
             </p>
-            
+
             <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400">
               <div className="flex items-center space-x-1">
                 <Star className="w-3 h-3 text-yellow-400" />
@@ -132,7 +155,7 @@ export default function BusinessProfileCard({
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Full variant
@@ -148,33 +171,43 @@ export default function BusinessProfileCard({
           />
         </div>
       )}
-      
+
       <div className="p-6">
         {/* Header */}
         <div className="flex items-start space-x-4 mb-4">
           <img
-            src={profile.logo || `https://ui-avatars.com/api/?name=${profile.businessName}&background=FF1744&color=fff`}
+            src={
+              profile.logo ||
+              `https://ui-avatars.com/api/?name=${profile.businessName}&background=FF1744&color=fff`
+            }
             alt={profile.businessName}
             className="w-16 h-16 rounded-lg border-4 border-white dark:border-gray-800 shadow-lg"
           />
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-1">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 {profile.businessName}
               </h2>
-              {getVerificationBadge(profile.verificationLevel, profile.isVerified)}
+              {getVerificationBadge(
+                profile.verificationLevel,
+                profile.isVerified
+              )}
             </div>
-            
+
             <p className="text-gray-600 dark:text-gray-400 mb-2">
               {profile.description}
             </p>
-            
+
             <div className="flex items-center space-x-4 text-sm">
               <div className="flex items-center space-x-1">
                 <Star className="w-4 h-4 text-yellow-400" />
-                <span className="font-medium">{profile.stats.averageRating.toFixed(1)}</span>
-                <span className="text-gray-500">({profile.stats.totalReviews} reviews)</span>
+                <span className="font-medium">
+                  {profile.stats.averageRating.toFixed(1)}
+                </span>
+                <span className="text-gray-500">
+                  ({profile.stats.totalReviews} reviews)
+                </span>
               </div>
               <div className={`flex items-center space-x-1 ${status.color}`}>
                 <Clock className="w-4 h-4" />
@@ -189,29 +222,35 @@ export default function BusinessProfileCard({
           {profile.website && (
             <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
               <Globe className="w-4 h-4" />
-              <a href={profile.website} target="_blank" rel="noopener noreferrer" 
-                 className="text-blue-600 hover:text-blue-800 dark:text-blue-400">
+              <a
+                href={profile.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400"
+              >
                 {profile.website}
               </a>
             </div>
           )}
-          
+
           <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
             <Mail className="w-4 h-4" />
             <span>{profile.email}</span>
           </div>
-          
+
           {profile.phone && (
             <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
               <Phone className="w-4 h-4" />
               <span>{profile.phone}</span>
             </div>
           )}
-          
+
           {profile.address && (
             <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
               <MapPin className="w-4 h-4" />
-              <span>{profile.address.city}, {profile.address.state}</span>
+              <span>
+                {profile.address.city}, {profile.address.state}
+              </span>
             </div>
           )}
         </div>
@@ -222,19 +261,25 @@ export default function BusinessProfileCard({
             <div className="text-lg font-bold text-gray-900 dark:text-white">
               {profile.stats.totalCustomers.toLocaleString()}
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">Customers</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              Customers
+            </div>
           </div>
           <div className="text-center">
             <div className="text-lg font-bold text-gray-900 dark:text-white">
               {profile.stats.totalAppointments}
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">Appointments</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              Appointments
+            </div>
           </div>
           <div className="text-center">
             <div className="text-lg font-bold text-gray-900 dark:text-white">
               {profile.stats.responseTime}m
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">Response</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              Response
+            </div>
           </div>
         </div>
 
@@ -248,7 +293,7 @@ export default function BusinessProfileCard({
               <Mail className="w-4 h-4" />
               <span>Contact</span>
             </button>
-            
+
             {profile.features.appointmentBooking && (
               <button
                 onClick={onBookAppointment}
@@ -258,7 +303,7 @@ export default function BusinessProfileCard({
                 <span>Book</span>
               </button>
             )}
-            
+
             {profile.features.paymentRequests && (
               <button
                 onClick={onRequestPayment}
@@ -272,5 +317,5 @@ export default function BusinessProfileCard({
         )}
       </div>
     </div>
-  )
+  );
 }

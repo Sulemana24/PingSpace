@@ -43,8 +43,9 @@ export default function PaymentPage() {
     setMethodType(method.type);
     setProvider(method.provider);
     setAccountInfo(
-      method.type === "Credit Card" ? method.last4 : method.number
+      method.type === "Credit Card" ? method.last4 || "" : method.number || ""
     );
+
     setShowModal(true);
   };
 
